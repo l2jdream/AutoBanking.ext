@@ -1,6 +1,11 @@
 # AutoBanking.ext
 Extersion for automatic banking in the l2jDream datapack or lucera2.
 
+![gold bar](captura.png)
+
+## HTML edit
+Edit the file `data/html[en/pt]/scripts/services/banking/autobanking.htm` to change the text of the page.
+
 ## Installation
 Copy the file AutoBanking.ext.jar to the folder libs.
 
