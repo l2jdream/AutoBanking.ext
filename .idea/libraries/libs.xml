@@ -1,0 +1,13 @@
+<component name="libraryTable">
+  <library name="libs">
+    <CLASSES>
+      <root url="file://$PROJECT_DIR$/../../ILrev42/libs" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+    <excluded>
+      <root url="jar://$PROJECT_DIR$/../../ILrev42/libs/npcBuffer.ext.jar!/" />
+    </excluded>
+    <jarDirectory url="file://$PROJECT_DIR$/../../ILrev42/libs" recursive="false" />
+  </library>
+</component>

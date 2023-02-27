@@ -1,0 +1,62 @@
+package services.Banking;
+
+
+import l2.gameserver.AutoBankingConfig;
+import l2.gameserver.handler.voicecommands.VoicedCommandHandler;
+import l2.gameserver.handler.voicecommands.impl.AutoBankingImpl;
+import l2.gameserver.listener.actor.player.OnItemPickupListener;
+import l2.gameserver.model.Player;
+import l2.gameserver.model.actor.listener.CharListenerList;
+import l2.gameserver.model.items.ItemInstance;
+import l2.gameserver.scripts.Functions;
+import l2.gameserver.scripts.ScriptFile;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+public class AutoBanking extends Functions implements ScriptFile {
+    public static final Logger LOG = LoggerFactory.getLogger(AutoBanking.class);
+    private static final String DISPLAY_NAME = "AutoGoldBar";
+    private static final CreateGolbarListenerImpl CGLI = new CreateGolbarListenerImpl();
+
+    @Override
+    public void onLoad() {
+        AutoBankingConfig.load();
+        if (AutoBankingConfig.AUTO_GOLD_BAR_ENABLE) {
+            LOG.info( DISPLAY_NAME + " Service: [state: activated]");
+            CharListenerList.addGlobal(CGLI);
+            VoicedCommandHandler.getInstance().registerVoicedCommandHandler(new AutoBankingImpl());
+        } else {
+            LOG.info( DISPLAY_NAME + " Service: [state: deactivated]");
+        }
+
+    }
+
+    @Override
+    public void onReload() {
+        onLoad(); //reload configs
+    }
+
+    @Override
+    public void onShutdown() {
+        if (AutoBankingConfig.AUTO_GOLD_BAR_ENABLE) {
+            CharListenerList.removeGlobal(CGLI);
+            LOG.info(DISPLAY_NAME + " Service: shutdown successfully.");
+        }
+    }
+
+    private static class CreateGolbarListenerImpl implements OnItemPickupListener {
+
+        @Override
+        public void onItemPickup(Player player, ItemInstance itemInstance) {
+            if (!AutoBankingConfig.AUTO_GOLD_BAR_AVAILABLE_ONLY_PREMIUM && !player.hasBonus()){
+                return;
+            }
+            if (player.getVarBoolean("isAutoGoldBar")) {
+                if (itemInstance.getItemId() == 57 && player.getInventory().getAdena() >= AutoBankingConfig.AUTO_GOLD_BAR_ADENA_COUNT) {
+                    player.getInventory().addItem(AutoBankingConfig.AUTO_GOLD_BAR_ITEM_ID, 1);
+                    player.getInventory().reduceAdena(AutoBankingConfig.AUTO_GOLD_BAR_ADENA_COUNT);
+                }
+            }
+        }
+    }
+}

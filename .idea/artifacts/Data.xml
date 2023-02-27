@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact build-on-make="true" name="Data">
+    <output-path>$PROJECT_DIR$/../../ILrev42/Game</output-path>
+    <root id="root">
+      <element id="dir-copy" path="$PROJECT_DIR$/Game" />
+    </root>
+  </artifact>
+</component>
