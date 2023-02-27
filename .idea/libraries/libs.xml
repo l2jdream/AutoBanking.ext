@@ -6,7 +6,7 @@
     <JAVADOC />
     <SOURCES />
     <excluded>
-      <root url="jar://$PROJECT_DIR$/../../ILrev42/libs/npcBuffer.ext.jar!/" />
+      <root url="jar://$PROJECT_DIR$/../../ILrev42/libs/AutoBanking.ext.jar!/" />
     </excluded>
     <jarDirectory url="file://$PROJECT_DIR$/../../ILrev42/libs" recursive="false" />
   </library>

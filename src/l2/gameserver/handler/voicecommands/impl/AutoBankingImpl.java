@@ -11,35 +11,39 @@ import java.text.DecimalFormat;
 
 public class AutoBankingImpl extends Functions implements IVoicedCommandHandler {
 
-    private static final String[] COMMANDS = {"autogoldbar", "goldbar", "deposit", "withdraw"};
+    private static final String[] COMMANDS = {"autogoldbar", "isAutoBanking", "goldbar", "deposit", "withdraw"};
 
     @Override
     public boolean useVoicedCommand(String command, Player player, String args) {
 
-        if (!AutoBankingConfig.AUTO_GOLD_BAR_ENABLE || player == null) {
+        if (!AutoBankingConfig.AUTO_BANKING_ENABLE || player == null) {
             return false;
         }
 
-        if (command.equalsIgnoreCase(COMMANDS[0])) {
-            if (player.getVarBoolean("isAutoGoldBar")) {
-                player.unsetVar("isAutoGoldBar");
-                player.sendMessage("AutoGoldBar: deactivated");
+        if (AutoBankingConfig.AUTO_BANKING_AVAILABLE_ONLY_PREMIUM && !player.hasBonus()){
+            return false;
+        }
+
+        if (command.equalsIgnoreCase(COMMANDS[0]) || command.equalsIgnoreCase(COMMANDS[1])) {
+            if (player.getVarBoolean("isAutoBanking")) {
+                player.unsetVar("isAutoBanking");
+                player.sendMessage("AutoBanking: deactivated");
                 htmlBuilder(player);
                 return false;
             } else {
-                player.setVar("isAutoGoldBar", "true", -1);
-                player.sendMessage("AutoGoldBar: activated");
+                player.setVar("isAutoBanking", "true", -1);
+                player.sendMessage("AutoBanking: activated");
                 htmlBuilder(player);
                 return true;
             }
-        } else if (command.equalsIgnoreCase(COMMANDS[1])) {
+        } else if (command.equalsIgnoreCase(COMMANDS[2])) {
             htmlBuilder(player);
             return true;
-        } else if (command.equalsIgnoreCase(COMMANDS[2])) {
+        } else if (command.equalsIgnoreCase(COMMANDS[3])) {
             Boolean deposit = this.deposit(command, player, args);
             htmlBuilder(player);
             return deposit;
-        } else if (command.equalsIgnoreCase(COMMANDS[3])) {
+        } else if (command.equalsIgnoreCase(COMMANDS[4])) {
             Boolean withdraw = this.withdraw(command, player, args);
             htmlBuilder(player);
             return withdraw;
@@ -49,12 +53,12 @@ public class AutoBankingImpl extends Functions implements IVoicedCommandHandler 
 
     private void htmlBuilder(Player player) {
         if (player != null) {
-            String html = HtmCache.getInstance().getNotNull("scripts/services/goldbar/autogoldbar.htm", player);
-            html = html.replace("%onOff%", player.getVarBoolean("isAutoGoldBar") ? "OFF" : "ON");
-            html = html.replace("%enabled%", player.getVarBoolean("isAutoGoldBar") ? "<font color=\"00FF00\">Active</font>" : "<font color=\"FF0000\">Disabled</font>");
-            html = html.replace("%goldbar%", String.valueOf(player.getInventory().getCountOf(AutoBankingConfig.AUTO_GOLD_BAR_ITEM_ID)));
+            String html = HtmCache.getInstance().getNotNull("scripts/services/banking/autobanking.htm", player);
+            html = html.replace("%onOff%", player.getVarBoolean("isAutoBanking") ? "OFF" : "ON");
+            html = html.replace("%enabled%", player.getVarBoolean("isAutoBanking") ? "<font color=\"00FF00\">Active</font>" : "<font color=\"FF0000\">Disabled</font>");
+            html = html.replace("%goldbar%", String.valueOf(player.getInventory().getCountOf(AutoBankingConfig.AUTO_BANKING_ITEM_ID)));
             html = html.replace("%adena%", formatNumber(player.getInventory().getAdena()));
-            html = html.replace("%adena_golbar%", formatNumber(AutoBankingConfig.AUTO_GOLD_BAR_ADENA_COUNT));
+            html = html.replace("%adena_golbar%", formatNumber(AutoBankingConfig.AUTO_BANKING_ADENA_COUNT));
             html = html.replace("%deposit_command%", "bypass -h user_deposit");
             html = html.replace("%withdraw_command%", "bypass -h user_withdraw");
             Functions.show(html, player, null);
@@ -68,28 +72,28 @@ public class AutoBankingImpl extends Functions implements IVoicedCommandHandler 
     }
 
     public boolean deposit(String command, Player player, String args) {
-        if (getItemCount(player, 57) < (long) AutoBankingConfig.AUTO_GOLD_BAR_ADENA_COUNT) {
+        if (getItemCount(player, 57) < (long) AutoBankingConfig.AUTO_BANKING_ADENA_COUNT) {
             player.sendPacket(SystemMsg.INCORRECT_ITEM_COUNT);
             return false;
         } else {
-            removeItem(player, 57, (long) AutoBankingConfig.AUTO_GOLD_BAR_ADENA_COUNT);
+            removeItem(player, 57, (long) AutoBankingConfig.AUTO_BANKING_ADENA_COUNT);
             player.sendMessage("Deposit successfully converted");
-            addItem(player, AutoBankingConfig.AUTO_GOLD_BAR_ITEM_ID, 1L);
+            addItem(player, AutoBankingConfig.AUTO_BANKING_ITEM_ID, 1L);
             return true;
         }
     }
 
     public boolean withdraw(String command, Player player, String args) {
-        if (getItemCount(player, AutoBankingConfig.AUTO_GOLD_BAR_ITEM_ID) < 1L) {
+        if (getItemCount(player, AutoBankingConfig.AUTO_BANKING_ITEM_ID) < 1L) {
             player.sendPacket(SystemMsg.INCORRECT_ITEM_COUNT);
             return false;
         } else if (getItemCount(player, 57) >= 2_147_483_647L) {
             player.sendMessage("You can't withdraw more than 2.147.483.647 adena");
             return false;
         } else {
-            removeItem(player, AutoBankingConfig.AUTO_GOLD_BAR_ITEM_ID, 1L);
+            removeItem(player, AutoBankingConfig.AUTO_BANKING_ITEM_ID, 1L);
             player.sendMessage("Withdraw successfully converted");
-            addItem(player, 57, (long) AutoBankingConfig.AUTO_GOLD_BAR_ADENA_COUNT);
+            addItem(player, 57, (long) AutoBankingConfig.AUTO_BANKING_ADENA_COUNT);
             return true;
         }
     }

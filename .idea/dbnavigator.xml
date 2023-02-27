@@ -36,7 +36,9 @@
     </connection>
   </component>
   <component name="DBNavigator.Project.DatabaseFileManager">
-    <open-files />
+    <open-files>
+      <object connection-id="dc3e56bc-96d3-402d-9a51-16d3790fcc32" object-ref="schemas/l2jdreamv3/tables/character_variables" />
+    </open-files>
   </component>
   <component name="DBNavigator.Project.DatabaseSessionManager">
     <connection id="73fb6be4-66d0-4767-9b43-3b9a5d8fc0f9" />
