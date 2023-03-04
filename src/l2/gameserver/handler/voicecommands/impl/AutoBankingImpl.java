@@ -40,11 +40,11 @@ public class AutoBankingImpl extends Functions implements IVoicedCommandHandler 
             htmlBuilder(player);
             return true;
         } else if (command.equalsIgnoreCase(COMMANDS[3])) {
-            Boolean deposit = this.deposit(command, player, args);
+            boolean deposit = this.deposit(player);
             htmlBuilder(player);
             return deposit;
         } else if (command.equalsIgnoreCase(COMMANDS[4])) {
-            Boolean withdraw = this.withdraw(command, player, args);
+            boolean withdraw = this.withdraw(player);
             htmlBuilder(player);
             return withdraw;
         }
@@ -71,19 +71,19 @@ public class AutoBankingImpl extends Functions implements IVoicedCommandHandler 
         return df.format(number).replace(",", ".");
     }
 
-    public boolean deposit(String command, Player player, String args) {
-        if (getItemCount(player, 57) < (long) AutoBankingConfig.AUTO_BANKING_ADENA_COUNT) {
+    public boolean deposit(Player player) {
+        if (getItemCount(player, 57) < AutoBankingConfig.AUTO_BANKING_ADENA_COUNT) {
             player.sendPacket(SystemMsg.INCORRECT_ITEM_COUNT);
             return false;
         } else {
-            removeItem(player, 57, (long) AutoBankingConfig.AUTO_BANKING_ADENA_COUNT);
+            removeItem(player, 57, AutoBankingConfig.AUTO_BANKING_ADENA_COUNT);
             player.sendMessage("Deposit successfully converted");
             addItem(player, AutoBankingConfig.AUTO_BANKING_ITEM_ID, 1L);
             return true;
         }
     }
 
-    public boolean withdraw(String command, Player player, String args) {
+    public boolean withdraw(Player player) {
         if (getItemCount(player, AutoBankingConfig.AUTO_BANKING_ITEM_ID) < 1L) {
             player.sendPacket(SystemMsg.INCORRECT_ITEM_COUNT);
             return false;
@@ -93,7 +93,7 @@ public class AutoBankingImpl extends Functions implements IVoicedCommandHandler 
         } else {
             removeItem(player, AutoBankingConfig.AUTO_BANKING_ITEM_ID, 1L);
             player.sendMessage("Withdraw successfully converted");
-            addItem(player, 57, (long) AutoBankingConfig.AUTO_BANKING_ADENA_COUNT);
+            addItem(player, 57, AutoBankingConfig.AUTO_BANKING_ADENA_COUNT);
             return true;
         }
     }

@@ -20,20 +20,20 @@ public class AutoBankingConfig {
 
     public static void load() {
         // load configuration file
-        ExProperties auto_gold_bar = initProperties(AUTO_GOLD_BAR_FILE);
+        ExProperties auto_gold_bar = initProperties();
 
         AUTO_BANKING_ENABLE = auto_gold_bar.getProperty("AutoBankingEnable", true);
         AUTO_BANKING_AVAILABLE_ONLY_PREMIUM = auto_gold_bar.getProperty("AutoBankingOnlyForPremium", false);
         AUTO_BANKING_ADENA_COUNT = auto_gold_bar.getProperty("AutoBankingAdenaCount", 250_000_000L);
         AUTO_BANKING_ITEM_ID = auto_gold_bar.getProperty("AutoBankingItemId", 3470);
     }
-    private static final ExProperties initProperties(String filename) {
+    private static ExProperties initProperties() {
         ExProperties result = new ExProperties();
 
         try {
-            result.load(new File(filename));
+            result.load(new File(AutoBankingConfig.AUTO_GOLD_BAR_FILE));
         } catch (final IOException e) {
-            LOG.error(AutoBankingConfig.class.getSimpleName() + ": Error loading " + filename + " config.");
+            LOG.error(AutoBankingConfig.class.getSimpleName() + ": Error loading " + AutoBankingConfig.AUTO_GOLD_BAR_FILE + " config.");
         }
         return result;
     }
