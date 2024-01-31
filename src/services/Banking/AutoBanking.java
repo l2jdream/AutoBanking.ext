@@ -2,6 +2,7 @@ package services.Banking;
 
 
 import l2.gameserver.AutoBankingConfig;
+import l2.gameserver.Config;
 import l2.gameserver.handler.voicecommands.VoicedCommandHandler;
 import l2.gameserver.handler.voicecommands.impl.AutoBankingImpl;
 import l2.gameserver.listener.actor.player.OnItemPickupListener;
@@ -53,8 +54,8 @@ public class AutoBanking extends Functions implements ScriptFile {
             }
             if (player.getVarBoolean("isAutoBanking")) {
                 if (itemInstance.getItemId() == 57 && player.getInventory().getAdena() >= AutoBankingConfig.AUTO_BANKING_ADENA_COUNT) {
-                    player.getInventory().addItem(AutoBankingConfig.AUTO_BANKING_ITEM_ID, 1);
-                    player.getInventory().reduceAdena(AutoBankingConfig.AUTO_BANKING_ADENA_COUNT);
+                    removeItem(player, 57, AutoBankingConfig.AUTO_BANKING_ADENA_COUNT);
+                    addItem(player, AutoBankingConfig.AUTO_BANKING_ITEM_ID, 1L);
                 }
             }
         }
