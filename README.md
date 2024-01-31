@@ -7,10 +7,11 @@ Extersion for automatic banking in the l2jDream datapack or lucera2.
 Edit the file `data/html[en/pt]/scripts/services/banking/autobanking.htm` to change the text of the page.
 
 ## Installation
-Copy the file AutoBanking.ext.jar to the folder libs.
+Copy the file `AutoBanking.ext.jar` to the folder libs.
 
 ## Configuration
-Copy the file AutoBanking.properties to the folder config/custom in the game folder.
+* Copy the file `AutoBanking.properties` to the folder config/custom in the game server folder.
+* Copy variables from file `extra/strings.properties` to file `data/string/strings_[en/ru].properties` in the game server folder.
 
 ## Usage
 The extension is activated by default. To disable it, set the property `AutoBankingEnable` to `false`.
